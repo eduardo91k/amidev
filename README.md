@@ -1,0 +1,2 @@
+# amidev
+develeps for amisoft
