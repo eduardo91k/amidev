@@ -1,0 +1,355 @@
+<meta charset="utf-8"/>
+
+<div class="table-responsive col-sm-12">
+<div class="section-header">
+    <div class="card-head uni-header">
+        <header>
+            <div class="row">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Mantenedor de Usuarios 99</h3>
+                        <br />
+                        <!-- Input box 1 -->
+                        <div class="input-group">
+                          <input type="text" data-bind="value: nomUsuario" class="form-control" placeholder="Input" aria-describedby="basic-addon2">
+                          <span class="input-group-addon glyphicon glyphicon-search" id="basic-addon2"></span>
+                          <br />
+                        </div>
+                        <div>input -> <span data-bind="text: nomUsuario"></span></div>
+                        <br />
+                        <!-- input box 2 -->
+                        <div class="input-group">
+                          <input type="text" data-bind="textInput: nomUsuario2" class="form-control" placeholder="Buscar Usuario" aria-describedby="basic-addon2">
+                          <span class="input-group-addon glyphicon glyphicon-search" id="basic-addon2"></span>
+                        </div>
+                        <br />
+                        <div>input -> <span data-bind="text: nomUsuario2"></span></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+</div>
+<table id="selectable" class="table table-fixedheader table-bordered table-condensed table-hover">
+    <thead>
+    <tr>
+        <th width="10%"><span>Id</span>
+        </th>
+        <th width="15%"><span>Rut 23455</span>
+        </th>
+        <th width="25%"><span>Nombres</span>
+        </th>
+        <th width="15%"><span>Apellidos</span>
+        </th>
+
+        <th width="25%"><span>Email</span>
+        </th>
+
+    </tr>
+    </thead>
+    <tbody data-bind="foreach: usuariosMatch">
+    <tr data-bind="click: function(){$parent.seleccionar($data);}, css:{'warning':$parent.idUsuarioSeleccionado()==id()}">
+        <td style="cursor: pointer" width="10%" data-bind="text: id"></td>
+        <td style="cursor: pointer" width="15%" data-bind="text: rutCompleto"></td>
+        <td style="cursor: pointer" width="25%" data-bind="text: nombres" class="text-capitalize"></td>
+        <td style="cursor: pointer" width="15%" data-bind="text: apellidoPaterno() +' '+apellidoMaterno()"
+            class="text-capitalize"></td>
+
+        <td style="cursor: pointer" width="25%" data-bind="text: email" class="text-capitalize"></td>
+
+
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="6" width="100%">
+            <span class="glyphicon glyphicon-plus" data-bind="click: showModalForm" style="cursor: pointer"></span>
+            <!-- ko ifnot: usuario().id --><span class="glyphicon glyphicon-edit disabled" style="opacity: 0.25"></span>
+            <span class="glyphicon glyphicon-minus" style="opacity: 0.25"></span>
+            <!-- /ko -->
+            <!-- ko if: usuario().id -->
+            <span class="glyphicon glyphicon-edit disabled" data-bind="click: showModalFormEdit" style="cursor: pointer"></span>
+             <!-- ko if: usuario().rut() != rutUser() -->
+            <span class="glyphicon glyphicon-minus" style="cursor: pointer" data-bind="  click: showModalEliminar"></span>
+               <!-- /ko -->
+            <!-- /ko -->
+        </td>
+    </tr>
+    </tfoot>
+</table>
+</div>
+
+<form class="form row" role="form">
+
+<div id="formPersona" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal" data-bind="click: limpiarForm">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <!-- ko ifnot: usuario().idUsuario -->
+                <h4 class="modal-title">Ingreso de Usuario</h4>
+
+                <!--  /ko -->
+                <!-- ko if: usuario().idUsuario -->
+                <h4 class="modal-title">Editar Usuario (Es obligatorio)</h4>
+
+                <!--  /ko -->
+
+            </div>
+
+
+            <div class="modal-body">
+                <div id="usuario-form" role="form" class="row">
+
+                    <!-- ko ifnot: usuario().idUsuario -->
+                    <div class="form-group has-callback col-md-6">
+                        <label for="rut" class="required">Rut:</label>
+                        <input data-bind="value: rut, event: {change: changeRut}" class="form-control" id="rut"
+                               name="rut"></input>
+                    </div>
+                    <!-- /ko -->
+                    <div class="form-group has-callback col-md-6">
+                        <label for="nombre" class="required">Nombre:</label>
+                        <input data-bind="value: usuario().nombres" class="form-control" id="nombre"></input>
+                    </div>
+                    <div class="form-group has-callback col-md-3">
+                        <label for="apellido" class="required">Ap.Paterno:</label>
+                        <input data-bind="value: usuario().apellidoPaterno" class="form-control" id="apellido"></input>
+                    </div>
+                    <div class="form-group has-callback col-md-3">
+                        <label for="apellido" class="required">Ap.Materno:</label>
+                        <input data-bind="value: usuario().apellidoMaterno" class="form-control" id="apellido"></input>
+                    </div>
+                    <div class="form-group has-callback col-md-6">
+                        <label for="direccion">Direccion:</label>
+                        <input data-bind="value: usuario().direccion" class="form-control" id="direccion"></input>
+                    </div>
+                    <div class="form-group has-callback col-md-6">
+                        <label for="comuna">Comuna :</label>
+                        <select class="form-control" name="comuna"
+                                data-bind="value: usuario().comuna, valueAllowUnset: true, options: comunas,  optionsCaption: '-- Seleccione una comuna --', optionsValue: $data, optionsText: 'name'"/>
+                    </div>
+                    <div class="form-group has-callback col-md-6">
+                        <label for="prefesion">Profesión:</label>
+                        <input data-bind="value: usuario().profesion" class="form-control" id="prefesion"></input>
+                    </div>
+                    <div class="form-group has-callback col-md-6">
+                        <label for="telefono">Telefono :</label>
+                        <input type="number" id="telefono" class="form-control" name="telefono"
+                               data-bind="value: usuario().telefono"></input>
+                    </div>
+                    <div class="form-group has-callback col-md-6">
+                        <label for="email" class="required">Email :</label>
+                        <input type="text" id="email" class="form-control" name="email"
+                               data-bind="value: usuario().email"></input>
+                    </div>
+
+                    <div class="form-group has-callback col-md-6">
+                        <label for="campo2" class="required"> Clave:</label>
+                        <input data-bind="value: usuario().password" type="password" min="4" max="10"
+                               class="form-control" id="campo2" name="campo2" autocomplete="off">
+                    </div>
+
+                    <div class="form-group has-callback col-md-6">
+                        <label>&nbsp;</label><br/>
+                        <label for="adm">Administrador
+                            <input type="checkbox" data-bind="checked: usuario().administrador"></input>
+                        </label><br/>
+                        <span style="font-weight: bold;font-size:x-small;">(Puede realizar envios al tribunal y administrar usuarios.)</span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-6" style="text-align: left;">
+                    <p class="alert alert-info">
+                        <strong>(*) Campos Obligatorios</strong>
+                    </p>
+                </div>
+                <div class="col-md-6" style="margin-top: 3%; margin-left: -20px;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            data-bind="click: limpiarForm">Cancelar
+                    </button>
+                    <!-- ko ifnot: usuario().idUsuario -->
+                    <button type="button" class="btn btn-primary"
+                            data-bind="enable: valid, click: guardarUsuario">Guardar
+                    </button>
+                    <!-- /ko -->
+                    <!-- ko if: usuario().idUsuario -->
+                    <button type="button" class="btn btn-primary"
+                            data-bind="enable: valid, click: actualizarUsuario">Actualizar
+                    </button>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span data-bind="click: limpiarForm" aria-hidden="true">&times;</span><span class="sr-only"
+                                                                                                data-bind="click: limpiarForm">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Error al guardar</h4>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-warning" role="alert">
+                    <span class="glyphicon glyphicon-warning-sign"></span>&nbsp; Atencion la persona ya se encuentra registrada y es un usuario del sistema.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"
+                        data-bind="click: limpiarForm">Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span data-bind="click: limpiarForm" aria-hidden="true">&times;</span><span class="sr-only"
+                                                                                                data-bind="click: limpiarForm">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Usuario Registrado</h4>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-success" role="alert">
+                    <span class="glyphicon glyphicon-ok"></span>&nbsp; El usuario se ha guardado satisfactoriamente
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalNoSaved" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span data-bind="click: limpiarForm" aria-hidden="true">&times;</span><span class="sr-only"
+                                                                                                data-bind="click: limpiarForm">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Error al Guardar</h4>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp; Ocurrio un problema al guardar el usuario.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"
+                        data-bind="click: limpiarForm">Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span data-bind="click: limpiarForm" aria-hidden="true">&times;</span><span class="sr-only"
+                                                                                                data-bind="click: limpiarForm">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Eliminar Usuario</h4>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign"
+                          aria-hidden="true"></span>&nbsp; ¿Realmente desea eliminar este usuario?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        data-bind="click: eliminarUsuario">Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalDeleteSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span data-bind="click: limpiarForm" aria-hidden="true">&times;</span><span class="sr-only"
+                                                                                                data-bind="click: limpiarForm">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Usuario Eliminado</h4>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-success" role="alert">
+                    El usuario ha sido eliminado con exito <span class="glyphicon glyphicon-ok"
+                                                                 aria-hidden="true"></span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalUpdateSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span data-bind="click: limpiarForm" aria-hidden="true">&times;</span><span class="sr-only"
+                                                                                                data-bind="click: limpiarForm">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Usuario Actualizado</h4>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-success" role="alert">
+                    El usuario ha sido actualizado con exito <span class="glyphicon glyphicon-ok"
+                                                                   aria-hidden="true"></span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalUpdateError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span data-bind="click: limpiarForm" aria-hidden="true">&times;</span><span class="sr-only"
+                                                                                                data-bind="click: limpiarForm">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Error al actualizar</h4>
+            </div>
+            <div class="modal-body">
+                <p class="alert alert-warning" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign"
+                          aria-hidden="true"></span> No se ha podidio actualizar el usuario
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
